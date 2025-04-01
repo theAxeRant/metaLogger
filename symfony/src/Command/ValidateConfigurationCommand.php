@@ -28,7 +28,6 @@ HELP
     }
     protected function execute(InputInterface $input, OutputInterface $output): int {
         $io = new MetaLoggerStyle($input, $output);
-        $io->log('Started');
 
         $config = $input->getArgument('config');
 
@@ -37,9 +36,9 @@ HELP
             return Command::INVALID;
         }
 
-        $config = Yaml::parseFile($config);
+        $configData = Yaml::parseFile($config);
 
-        $validator = ConfigurationValidator::create($config);
+        $validator = ConfigurationValidator::create($configData);
 
         if(!$validator->validate()){
             foreach ($validator->errors() as $errors){
@@ -48,7 +47,7 @@ HELP
             return Command::FAILURE;
         }
 
-        $io->log('Completed');
+        $io->success("'${config}' file is valid");
         return Command::SUCCESS;
     }
 }

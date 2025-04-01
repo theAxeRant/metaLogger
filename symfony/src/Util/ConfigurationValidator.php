@@ -2,6 +2,7 @@
 
 namespace Theaxerant\Metalogger\Util;
 
+use Theaxerant\Metalogger\Parser\IpParser;
 use Valitron\Validator;
 
 class ConfigurationValidator {
@@ -40,11 +41,13 @@ class ConfigurationValidator {
     protected function buildRules(){
         $this->validator
             ->rule('required', ['logger', 'log', 'logger.auth_key', 'logger.endpoint', 'logger.single', 'logger.ip'])
+            ->rule('regex', 'logger.single', '/(?i)^.*%s.*/')->message('{field} must contain %%s placeholder for key')
+            ->rule('regex', 'logger.ip', '/(?i)^.*%s.*/')->message('{field} must contain %%s placeholder for key')
             ->rule('url', ['logger.endpoint'])
             ->rule('array', ['logger', 'log', 'log.drive', 'log.file_access', '.log.file_count'])->message('{field} must be array')
-            ->rule('required', ['log.ip.version', 'log.ip.ip_whitelist'])
+            ->rule('required', ['log.ip.version', 'log.ip.mask'])
             ->rule('integer', ['log.ip.version'])
-            ->rule('optional', ['log.drive', 'log.file_access', '.log.file_count'])
-        ;
+            ->rule('in', 'log.ip.version', [ IpParser::VERSION_1, IpParser::VERSION_2, IpParser::VERSION_3 ])
+            ->rule('optional', ['log.drive', 'log.file_access', '.log.file_count']);
     }
 }

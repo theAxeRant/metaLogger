@@ -10,6 +10,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class CreateConfigurationCommand extends Command {
 
+    const BASE_CONFIG = __DIR__ . '/../../resources/default.yaml';
+
     protected function configure(){
         $this->setName('logger:create:config')
             ->setDescription('Create configuration file')
@@ -26,6 +28,13 @@ HELP
 
         $config = $input->getOption('config');
 
+        $base = file_get_contents(self::BASE_CONFIG);
+
+        $output = fopen($config, 'w');
+
+        fwrite($output, $base);
+
+        fclose($output);
 
         return Command::SUCCESS;
     }
