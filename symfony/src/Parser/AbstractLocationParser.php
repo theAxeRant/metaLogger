@@ -8,6 +8,10 @@ use Theaxerant\Metalogger\Parser\ParserInterface;
 
 abstract class AbstractLocationParser implements ParserInterface {
 
+    const FORMAT_DATE_STRING = 'Y-m-d H:i:s T';
+
+    const DEFAULT_TIMEZONE = 'America/New_York';
+
     /** @var Logger  */
     protected $logger;
     /** @var NamedLocationCollection  */
