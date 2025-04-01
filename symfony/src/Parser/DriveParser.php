@@ -8,7 +8,13 @@ use Theaxerant\Metalogger\Parser\ParserInterface;
 class DriveParser implements ParserInterface
 {
 
-    public function __construct(protected Logger $logger, protected array $drives) {}
+    protected $logger;
+    protected $drives;
+
+    public function __construct(Logger $logger, array $drives) {
+        $this->drives = $drives;
+        $this->logger = $logger;
+    }
 
     protected function collectDrives(): array{
         $result = [];

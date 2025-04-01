@@ -7,15 +7,13 @@ use Exception;
 class Logger
 {
 
-    private string $securityToken;
-    private string $hostname;
-    private string $ip_check_path;
-    private string $base_url;
-    private string $single_path;
+    private $securityToken;
+    private $hostname;
+    private $ip_check_path;
+    private $base_url;
+    private $single_path;
 
-    protected function __construct()
-    {
-    }
+    protected function __construct() {}
 
     public static function create(array $config): Logger
     {

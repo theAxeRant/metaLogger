@@ -2,11 +2,11 @@
     "name": "theaxerant/metalogger",
     "type": "project",
     "require": {
-        "symfony/console": "^7.2",
-        "symfony/finder": "^7.2"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^12.0"
+        "symfony/console": "^5.4",
+        "symfony/finder": "^5.4",
+        "vlucas/valitron": "^1.4",
+        "symfony/yaml": "^5.4",
+        "symfony/var-dumper": "^5.4"
     },
     "license": "MIT",
     "autoload": {
@@ -19,5 +19,8 @@
             "name": "Ryan Howe",
             "email": "ryanwhowe@gmail.com"
         }
-    ]
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^8.5"
+    }
 }

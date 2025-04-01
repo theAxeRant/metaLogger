@@ -2,28 +2,53 @@
 
 namespace Theaxerant\Metalogger\Command;
 
-use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Yaml\Yaml;
+use Theaxerant\Metalogger\Style\MetaLoggerStyle;
+use Theaxerant\Metalogger\Util\ConfigurationValidator;
 
-#[AsCommand(name: 'logger:validate:config', description: 'Validate a configuration file')]
 class ValidateConfigurationCommand extends Command {
 
     protected function configure(){
-        $this->addOption('config', 'c', InputOption::VALUE_REQUIRED, 'Configuration file')
-        ->setHelp(
+        $this->setName('logger:validate:config')
+            ->setDescription('Validate a configuration file')
+            ->addArgument('config', InputArgument::REQUIRED, 'Configuration file')
+            ->addOption('debug', 'd', InputOption::VALUE_NONE, 'Run in debug configuration')
+            ->setHelp(
             <<<'HELP'
-The <info>%command.name%</info> command creates configuration file.
+The <info>%command.name%</info> will validate the provided.
+
 HELP
         )
         ;
     }
     protected function execute(InputInterface $input, OutputInterface $output): int {
-        $io = new SymfonyStyle($input, $output);
+        $io = new MetaLoggerStyle($input, $output);
+        $io->log('Started');
 
+        $config = $input->getArgument('config');
+
+        if(!file_exists($config)) {
+            $io->error("Config file '${config}' not found");
+            return Command::INVALID;
+        }
+
+        $config = Yaml::parseFile($config);
+
+        $validator = ConfigurationValidator::create($config);
+
+        if(!$validator->validate()){
+            foreach ($validator->errors() as $errors){
+                $io->error($errors);
+            }
+            return Command::FAILURE;
+        }
+
+        $io->log('Completed');
         return Command::SUCCESS;
     }
 }

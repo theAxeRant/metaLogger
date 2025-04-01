@@ -3,12 +3,3 @@ services:
     build:
       context: ../images
       dockerfile: php.Dockerfile
-
-  nginx:
-    build:
-      context: ../images
-      dockerfile: nginx.Dockerfile
-    depends_on:
-      - php
-    ports:
-      - "8081:80"

@@ -9,7 +9,7 @@ use Symfony\Component\Finder\Finder;
 
 class Application extends \Symfony\Component\Console\Application {
 
-    private bool $commandsRegistered = false;
+    private $commandsRegistered = false;
 
     const LOGO = "                   __        __
    ____ ___  ___  / /_____ _/ /   ____  ____ _____ ____  _____

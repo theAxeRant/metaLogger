@@ -6,16 +6,24 @@ use Theaxerant\Metalogger\Logger;
 
 class IpParser implements ParserInterface {
 
-    const string VERSION_1 = '1';
-    const string VERSION_2 = '2';
-    const string VERSION_3 = '3';
+    const VERSION_1 = '1';
+    const VERSION_2 = '2';
+    const VERSION_3 = '3';
+
+    private $logger;
+    private $version;
+    private $netmask;
 
     /**
      * @param Logger $logger Configured Logger object to log the Internal IP address
      * @param string $version Command Version to use to parse the IP address
      * @param string|null $netmask Netmask to allow through to the log event
      */
-    public function __construct(private Logger $logger, private string $version, private ?string $netmask) {}
+    public function __construct(Logger $logger, string $version, ?string $netmask) {
+        $this->netmask = $netmask;
+        $this->version = $version;
+        $this->logger = $logger;
+    }
 
     private function getInternalIp(): string {
         $internal_ip_check = [
