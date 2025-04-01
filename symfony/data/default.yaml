@@ -1,0 +1,18 @@
+#
+#
+logger:
+  auth_key: # api authorization key
+  endpoint: # api logger endpoint
+  single: # single result log path
+  ip: # ip result log path
+
+log:
+  ip:
+    version:
+    ip_whitelist:
+  drive:
+    - { name: "", path: "" }
+  file_access:
+    - { name: "", path: "" }
+  file_count:
+    - { name: "", path: "" }

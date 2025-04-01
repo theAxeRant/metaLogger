@@ -1,0 +1,23 @@
+{
+    "name": "theaxerant/metalogger",
+    "type": "project",
+    "require": {
+        "symfony/console": "^7.2",
+        "symfony/finder": "^7.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^12.0"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Theaxerant\\Metalogger\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Ryan Howe",
+            "email": "ryanwhowe@gmail.com"
+        }
+    ]
+}
