@@ -13,7 +13,7 @@ class CreateConfigurationCommand extends Command {
     const BASE_CONFIG = __DIR__ . '/../../resources/default.yaml';
 
     protected function configure(){
-        $this->setName('logger:create:config')
+        $this->setName('config:create')
             ->setDescription('Create configuration file')
             ->addOption('config', 'c', InputOption::VALUE_REQUIRED, 'Configuration file')
             ->setHelp(

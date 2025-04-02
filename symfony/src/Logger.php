@@ -20,10 +20,10 @@ class Logger
         $logger = new self();
         $logger->hostname = $logger->parseHostname();
 
-        $logger->securityToken = $config['security_token'];
-        $logger->ip_check_path = $config['ip_check_path'];
-        $logger->base_url = $config['base_url'];
-        $logger->single_path = $config['single_path'];
+        $logger->securityToken = dotGet($config, 'logger.auth_token');
+        $logger->ip_check_path = dotGet($config, 'logger.ip');
+        $logger->base_url = dotGet($config, 'logger.endpoint');
+        $logger->single_path = dotGet($config, 'logger.single');
         return $logger;
     }
 

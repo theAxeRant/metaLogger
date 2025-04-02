@@ -3,6 +3,7 @@
 namespace Theaxerant\Metalogger\Parser;
 
 use Theaxerant\Metalogger\Logger;
+use Theaxerant\Metalogger\Util\Helper\IpHelper;
 
 class IpParser implements ParserInterface {
 
@@ -32,12 +33,17 @@ class IpParser implements ParserInterface {
             self::VERSION_3 => "/sbin/ifconfig | grep 'inet ' | grep -v '127.0.0.1' | grep -v '172.17.0.1' | cut -d\  -f10 | awk '{ print $1}'",
         ];
 
-        return trim(shell_exec($internal_ip_check[$this->version]));
+        $ips = trim(shell_exec($internal_ip_check[$this->version]));
+        $ips = explode("\n", $ips);
+        $ips = array_filter($ips, function($ip) {
+            return !IpHelper::filterFromMask($ip, $this->netmask);
+        });
+        return implode("\n", $ips);
     }
 
     public function log(): void {
-        $internal_ip = $this->getInternalIp();
-        $this->logger->ipCheck($internal_ip);
+        $internal_ips = $this->getInternalIp();
+        $this->logger->ipCheck($internal_ips);
     }
 
     public function debug(): array {
@@ -45,7 +51,7 @@ class IpParser implements ParserInterface {
         return [
             "Internal IP Check Version {$this->version}",
             "Internal IP Check Netmask {$this->netmask}",
-            "Internal IP Check Netmask {$internal_ip}",
+            "Internal IP Check Output {$internal_ip}",
         ];
     }
 }

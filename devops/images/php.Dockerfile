@@ -7,6 +7,7 @@ RUN apt-get update \
     zlib1g-dev \
     libxml2-dev \
     libzip-dev \
+    net-tools \
   && docker-php-ext-install \
     zip \
     intl \

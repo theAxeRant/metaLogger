@@ -12,7 +12,7 @@ class NamedLocation {
     public static function create(array $data): NamedLocation {
         $self = new self();
         $self->name = self::getIfSet($data, 'name', null);
-        $self->name = self::getIfSet($data, 'name', null);
+        $self->path = self::getIfSet($data, 'path', null);
         return $self;
     }
 

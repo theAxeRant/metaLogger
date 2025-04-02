@@ -6,13 +6,17 @@
         "symfony/finder": "^5.4",
         "vlucas/valitron": "^1.4",
         "symfony/yaml": "^5.4",
-        "symfony/var-dumper": "^5.4"
+        "symfony/var-dumper": "^5.4",
+        "axetools/dot": "^1.0"
     },
     "license": "MIT",
     "autoload": {
         "psr-4": {
             "Theaxerant\\Metalogger\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": { "Tests\\MetaLogger\\": "tests/" }
     },
     "authors": [
         {
