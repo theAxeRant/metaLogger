@@ -28,4 +28,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 ENV COMPOSER_MEMORY_LIMIT=-1
 ENV COMPOSER_CACHE_DIR=/tmp
 
+# install Box for generating the Phar file
+RUN curl -LSs https://box-project.github.io/box2/installer.php | php && mv box.phar /usr/local/bin/box
+RUN chmod 755 /usr/local/bin/box
+
 WORKDIR /var/www/symfony/

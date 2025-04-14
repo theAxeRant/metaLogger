@@ -10,7 +10,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class CreateConfigurationCommand extends Command {
 
-    const BASE_CONFIG = __DIR__ . '/../../resources/default.yaml';
+    const BASE_CONFIG = __DIR__ . '/../resources/default.yaml';
 
     protected function configure(){
         $this->setName('config:create')

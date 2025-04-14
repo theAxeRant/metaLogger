@@ -1,0 +1,16 @@
+{
+  "directories": [
+    "src"
+  ],
+  "finder": [
+    {
+      "name": "*.php",
+      "in": "vendor"
+    }
+  ],
+  "chmod": "0755",
+  "main": "console",
+  "output": "metaLogger.phar",
+  "stub": true,
+  "compression": "GZ"
+}
