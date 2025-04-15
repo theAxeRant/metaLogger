@@ -17,8 +17,7 @@ class ConfigurationValidator {
         $this->buildRules();
     }
 
-    public static function create(array $data, Validator $validator = null): ConfigurationValidator {
-        $validator = $validator ?? new Validator($data);
+    public static function create(Validator $validator = null): ConfigurationValidator {
         return new self($validator);
     }
 

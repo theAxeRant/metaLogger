@@ -6,6 +6,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Yaml\Yaml;
 use Theaxerant\Metalogger\Style\MetaLoggerStyle;
 use Theaxerant\Metalogger\Util\ConfigurationValidator;
+use Theaxerant\Metalogger\Util\validator\Validator;
 
 class CommandHelper{
 
@@ -15,7 +16,8 @@ class CommandHelper{
             return Command::INVALID;
         }
 
-        $validator = ConfigurationValidator::create(Yaml::parseFile($configFile));
+        $valitron = new Validator(Yaml::parseFile($configFile));
+        $validator = ConfigurationValidator::create(Yaml::parseFile($configFile), $valitron);
 
         if(!$validator->validate()){
             foreach ($validator->errors() as $errors){

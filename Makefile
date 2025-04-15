@@ -22,7 +22,7 @@ dev-up:
 
 dev-bash: dev-up
 	@echo "##### Dev php Container Bash Prompt #####"
-	@(ch ${DEV} && docker compose exec php bash)
+	@(cd ${DEV} && docker compose exec php bash)
 
 build:
 	@echo "##### Building Prod Image #####"
