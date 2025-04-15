@@ -20,7 +20,7 @@ class Logger
         $logger = new self();
         $logger->hostname = $logger->parseHostname();
 
-        $logger->securityToken = dotGet($config, 'logger.auth_token');
+        $logger->securityToken = dotGet($config, 'logger.auth_key');
         $logger->ip_check_path = dotGet($config, 'logger.ip');
         $logger->base_url = dotGet($config, 'logger.endpoint');
         $logger->single_path = dotGet($config, 'logger.single');
@@ -80,6 +80,15 @@ class Logger
                 'method' => 'POST',
                 'content' => $content,
             ],
+        ];
+    }
+
+    public function debug(): array {
+        return [
+            "Authorization Token {$this->securityToken}",
+            "Base URL {$this->base_url}",
+            "Single Log enpoint {$this->single_path}",
+            "Ip Check Log endpoint {$this->ip_check_path}"
         ];
     }
 }

@@ -17,7 +17,7 @@ class CommandHelper{
         }
 
         $valitron = new Validator(Yaml::parseFile($configFile));
-        $validator = ConfigurationValidator::create(Yaml::parseFile($configFile), $valitron);
+        $validator = ConfigurationValidator::create($valitron);
 
         if(!$validator->validate()){
             foreach ($validator->errors() as $errors){

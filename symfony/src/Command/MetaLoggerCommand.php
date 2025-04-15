@@ -46,8 +46,12 @@ HELP
 
         // ok now what?  We have a valid config file
         $logEvents = [];
+        $debugOutput = [];
 
         $logger = Logger::create($configData);
+        if($debug) {
+            $debugOutput = $logger->debug();
+        }
         $ipParser = new IpParser(
             $logger,
             dotGet($configData, 'log.ip.version'),
@@ -71,7 +75,7 @@ HELP
             }
         }
 
-        $debugOutput = [];
+
         /** @var ParserInterface $logEvent */
         foreach ($logEvents as $logEvent) {
             if($debug) {
