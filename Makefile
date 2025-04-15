@@ -20,6 +20,10 @@ dev-up:
 	@test -s ${DEV}/compose.override.yaml || { echo "ERROR: compose.override.yaml is missing"; exit 1; }
 	@(cd ${DEV} && docker compose up -d)
 
+dev-down: dev-up
+	@echo "##### Stopping Dev Containers #####"
+	@(cd ${DEV} && docker compose down)
+
 dev-bash: dev-up
 	@echo "##### Dev php Container Bash Prompt #####"
 	@(cd ${DEV} && docker compose exec php bash)
