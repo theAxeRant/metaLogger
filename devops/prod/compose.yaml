@@ -2,4 +2,4 @@ services:
   php:
     build:
       context: ../images
-      dockerfile: dev.Dockerfile
+      dockerfile: prod.Dockerfile

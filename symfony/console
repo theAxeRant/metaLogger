@@ -1,0 +1,10 @@
+#!/usr/bin/env php
+<?php
+
+if(PHP_VERSION_ID < 70205){
+    echo "metaLogger is only compatibility with PHP >= 7.2", PHP_EOL;
+    exit();
+}
+
+require_once __DIR__ . '/vendor/autoload.php';
+(new Theaxerant\Metalogger\Util\Application())->run();
