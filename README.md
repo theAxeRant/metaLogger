@@ -1,6 +1,6 @@
 # metaLogger
 
-The metaLogger project is for adding logging instances to remote machines with the intention of logging data to the meta Logger service on theAxeRant.com
+The metaLogger project is for adding logging instances to remote machines with the intention of logging data to the meta Logger service on `theAxeRant.com`
 
 ## New Logging Deployments
 
@@ -8,6 +8,13 @@ The metaLogger project is for adding logging instances to remote machines with t
 * php >= 7.2
 
 ### Install the phar file
+
+The phar file can be downloaded from the [releases][1] section of the project.  The phar file can be copied to the 
+intended server and run from there. 
+
+```bash
+wget https://github.com/theAxeRant/metaLogger/blob/main/devops/release/metaLogger.phar
+```
 
 ### Create the config file
 
@@ -62,7 +69,7 @@ Full paths should be used when creating cronjobs, this is an example of a metaLo
 ```
 
 ## Development of metaLogger
-the metaLogger.phar is build using a virtual machine instance.
+The metaLogger.phar is built using a virtual machine instance.
 
 ---
 <dl>
@@ -73,3 +80,5 @@ the metaLogger.phar is build using a virtual machine instance.
         <strong>by <a href="https://github.com/ryanwhowe" target="_blank">Ryan Howe</a></strong>
     </dd>
 </dl>
+
+[1]: https://github.com/theAxeRant/metaLogger/blob/main/devops/release/metaLogger.phar
