@@ -12,12 +12,14 @@ log:
     version: # The version of the IP parser for the correct distribution of linux being used
     mask: # Ip mask to apply to the internal IP address to remove loopbacks, docker networks, or VM networks
 
-  # optional, report the drive empty space left
+  ## optional, report the drive empty space left
   #drive:
   #  - { name: "", path: "" }
-  # optional, report the last file access time for the path provided
+
+  ## optional, report the last file access time for the path provided
   #file_access:
   #  - { name: "", path: "" }
-  # optional, report the file count for the path provided
+
+  ## optional, report the file count for the path provided
   #file_count:
   #  - { name: "", path: "" }
