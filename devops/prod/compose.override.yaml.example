@@ -1,7 +1,0 @@
-services:
-  php:
-    volumes:
-      - <path to solution>/symfony:/var/www/symfony/
-    environment:
-      APP_ENV: dev
-      XDEBUG_CONFIG: remote_host=host.docker.internal remote_port=9003 remote_connect_back=0

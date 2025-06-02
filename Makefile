@@ -6,37 +6,31 @@
 # /_/ /_/ /_/\___/\__/\__,_/_____/\____/\__, /\__, /\___/_/
 #                                      /____//____/
 #
-
+.DEFAULT_GOAL := phar
 DEV = devops/dev
-PROD = devops/prod
 
-dev-build:
+build:
 	@echo "##### Building Dev Image #####"
 	@test -s ${DEV}/compose.override.yaml || { echo "ERROR: compose.override.yaml is missing"; exit 1; }
 	@(cd ${DEV} && docker compose build php)
 
-dev-up:
+up:
 	@echo "##### Bringing up Dev Containers #####"
 	@test -s ${DEV}/compose.override.yaml || { echo "ERROR: compose.override.yaml is missing"; exit 1; }
 	@(cd ${DEV} && docker compose up -d)
 
-dev-down: dev-up
+down: up
 	@echo "##### Stopping Dev Containers #####"
 	@(cd ${DEV} && docker compose down)
 
-dev-bash: dev-up
+bash: up
 	@echo "##### Dev php Container Bash Prompt #####"
 	@(cd ${DEV} && docker compose exec php bash)
 
-build:
-	@echo "##### Building Prod Image #####"
-	@test -s ${PROD}/compose.override.yaml || { echo "ERROR: compose.override.yaml is missing"; exit 1; }
-	@(cd ${PROD} && docker compose build php)
-
 phar: build
 	@echo "##### Building Phar File #####"
-	@test -s ${PROD}/compose.override.yaml || { echo "ERROR: compose.override.yaml is missing"; exit 1; }
-	@(cd ${PROD} && docker compose up -d)
-	@(cd ${PROD} && docker compose exec php composer install)
-	@(cd ${PROD} && docker compose exec php make build)
-	@(cd ${PROD} && docker compose down)
+	@test -s ${DEV}/compose.override.yaml || { echo "ERROR: compose.override.yaml is missing"; exit 1; }
+	@(cd ${DEV} && docker compose up -d)
+	@(cd ${DEV} && docker compose exec php composer install)
+	@(cd ${DEV} && docker compose exec php make build)
+	@(cd ${DEV} && docker compose down)
