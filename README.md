@@ -13,7 +13,7 @@ The phar file can be downloaded from the [releases][1] section of the project.  
 intended server and run from there. 
 
 ```bash
-wget https://github.com/theAxeRant/metaLogger/blob/main/devops/release/metaLogger.phar
+wget https://github.com/theAxeRant/metaLogger/blob/main/release/metaLogger.phar
 ```
 
 ### Create the config file
@@ -81,4 +81,4 @@ The metaLogger.phar is built using a virtual machine instance.
     </dd>
 </dl>
 
-[1]: https://github.com/theAxeRant/metaLogger/blob/main/devops/release/metaLogger.phar
+[1]: https://github.com/theAxeRant/metaLogger/blob/main/release/metaLogger.phar

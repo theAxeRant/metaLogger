@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
 namespace Theaxerant\Metalogger\Command;
 
@@ -18,7 +18,7 @@ class CreateConfigurationCommand extends Command {
             ->addOption('config', 'c', InputOption::VALUE_REQUIRED, 'Configuration file')
             ->setHelp(
             <<<'HELP'
-The <info>%command.name%</info> command creates configuration file.
+The <info>%command.name%</info> command creates a configuration file.
 HELP
         )
         ;
