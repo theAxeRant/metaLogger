@@ -42,6 +42,7 @@ class ConfigurationValidator {
             ->rule('required', ['logger', 'log', 'logger.auth_key', 'logger.endpoint', 'logger.single', 'logger.ip'])
             ->rule('regex', 'logger.single', '/(?i)^.*%s.*/')->message('{field} must contain %%s placeholder for key')
             ->rule('regex', 'logger.ip', '/(?i)^.*%s.*/')->message('{field} must contain %%s placeholder for key')
+            ->rule('regex', 'logger.series', '/(?i)^.*%s.*/')->message('{field} must contain %%s placeholder for key')
             ->rule('url', ['logger.endpoint'])
             ->rule('array', ['logger', 'log', 'log.drive', 'log.file_access', '.log.file_count'])->message('{field} must be array')
             ->rule('required', ['log.ip.version', 'log.ip.mask'])

@@ -27,7 +27,7 @@ class ExternalIpParser implements ParserInterface {
      */
     public function log(): void {
         $externalIp = $this->getExternalIp();
-        $this->logger->single(self::SINGLE_LOGGER_KEY, $externalIp);
+        $this->logger->series(true,self::SINGLE_LOGGER_KEY, $externalIp);
     }
 
     /**

@@ -12,6 +12,7 @@ class Logger
     private $ip_check_path;
     private $base_url;
     private $single_path;
+    private $series_path;
 
     protected function __construct() {}
 
@@ -24,6 +25,7 @@ class Logger
         $logger->ip_check_path = dotGet($config, 'logger.ip');
         $logger->base_url = dotGet($config, 'logger.endpoint');
         $logger->single_path = dotGet($config, 'logger.single');
+        $logger->series_path = dotGet($config, 'logger.series');
         return $logger;
     }
 
@@ -51,6 +53,24 @@ class Logger
         return $this;
     }
 
+    /**
+     * @param bool $distinct Is the series a distinct series or rolling series
+     * @param string $key
+     * @param string $value
+     * @return $this
+     * @throws Exception
+     */
+    public function series(bool $distinct, string $key, string $value): Logger {
+        $url = $this->generateSeriesMetaUrl($distinct, $key);
+        $postOptions = $this->postOptions($value);
+        $context = stream_context_create($postOptions);
+        $post = file_get_contents($url, false, $context);
+        if ($post === false) {
+            throw new Exception("data post was unsuccessful");
+        }
+        return $this;
+    }
+
     private static function parseHostname()
     {
         $hostname = php_uname('n');
@@ -66,6 +86,15 @@ class Logger
     private function generateSingleMetaUrl(string $key): string
     {
         return vsprintf($this->base_url . $this->single_path, [$this->hostname, urlencode($key)]);
+    }
+
+    private function generateSeriesMetaUrl(bool $distinct, string $key): string
+    {
+        $url = vsprintf($this->base_url . $this->series_path, [$this->hostname, urlencode($key)]);
+        if ($distinct) {
+            $url.='?distinct=1';
+        }
+        return $url;
     }
 
     /**
@@ -85,10 +114,11 @@ class Logger
 
     public function debug(): array {
         return [
-            "Authorization Token {$this->securityToken}",
-            "Base URL {$this->base_url}",
-            "Single Log enpoint {$this->single_path}",
-            "Ip Check Log endpoint {$this->ip_check_path}"
+            "Authorization Token: {$this->securityToken}",
+            "Base URL: {$this->base_url}",
+            "Single Log endpoint: {$this->single_path}",
+            "Series Log endpoint: {$this->series_path}",
+            "Ip Check Log endpoint: {$this->ip_check_path}"
         ];
     }
 }

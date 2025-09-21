@@ -5,6 +5,7 @@ logger:
   auth_key: # api authorization key
   endpoint: # api logger endpoint
   single: # single result log path
+  series: # series result log path
   ip: # ip result log path
 
 log:
