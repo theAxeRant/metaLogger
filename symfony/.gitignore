@@ -51,4 +51,4 @@
 # Embedded web-server pid file
 /.web-server-pid
 
-metaLogger.phar
+../release/metaLogger.phar
