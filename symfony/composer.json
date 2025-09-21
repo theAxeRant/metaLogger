@@ -1,5 +1,6 @@
 {
     "name": "theaxerant/metalogger",
+    "description": "The Metalogger phar for recording server information",
     "type": "project",
     "require": {
         "symfony/console": "^5.4",

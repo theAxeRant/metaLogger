@@ -26,6 +26,7 @@ The <info>%command.name%</info> command will prompt the user for the required co
 <info>auth_key:</info> The Authorization Key for the MetaLogger API
 <info>api_base:</info> The URL for the MetaLogger API
 <info>api_single:</info> The endpoint for single log requests
+<info>api_series:</info> The endpoint for series log requests
 <info>api_ip:</info> The API endpoint for IP requests
 <info>Ip Version:</info> The version of the ifconfig scraper to use, defaults to 3.
 <info>internal IP mask:</info> The IP mask to restrict internal IP addresses to, no mask will allow all internal IPs to log.
@@ -45,6 +46,7 @@ HELP
             'auth_key' => ['default' => null, 'help' => 'The Authorization Key for the MetaLogger API'],
             'endpoint' => ['default' => null, 'help' => 'The Base URL for the MetaLogger API'],
             'single' => ['default' => null, 'help' => 'The Single Value Endpoint for the MetaLogger API'],
+            'series' => ['default' => null, 'help' => 'The Series Value Endpoint for the MetaLogger API'],
             'ip'=> ['default' => null, 'help' => 'The IP Logging Endpoint for the MetaLogger API'],
             'version' => ['default' => 3, 'help' => 'The version of the ifconfig scraper to use, defaults to 3.'],
             'mask' => ['default' => '0.0.0.0/0', 'help' => 'The IP mask to restrict internal IP addresses to, no mask will allow all internal IPs to log.'],

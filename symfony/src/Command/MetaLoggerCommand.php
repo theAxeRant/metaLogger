@@ -11,6 +11,7 @@ use Symfony\Component\Yaml\Yaml;
 use Theaxerant\Metalogger\Logger;
 use Theaxerant\Metalogger\Parser\DirectoryFileCountParser;
 use Theaxerant\Metalogger\Parser\DriveFreeSpaceParser;
+use Theaxerant\Metalogger\Parser\ExternalIpParser;
 use Theaxerant\Metalogger\Parser\IpParser;
 use Theaxerant\Metalogger\Parser\LastFileAccessParser;
 use Theaxerant\Metalogger\Parser\ParserInterface;
@@ -58,6 +59,10 @@ HELP
             dotGet($configData, 'log.ip.mask')
         );
         $logEvents[] = $ipParser;
+
+        $externalIpParser = new ExternalIpParser($logger);
+
+        $logEvents[] = $externalIpParser;
 
         // look through the directory parser classes and if the configurations exist add them to the stack fifo
         foreach([
