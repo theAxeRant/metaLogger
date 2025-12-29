@@ -12,12 +12,12 @@ class ConfigurationValidator {
      */
     private $validator;
 
-    protected function __construct(Validator $validator = null) {
+    protected function __construct(?Validator $validator = null) {
         $this->validator = $validator;
         $this->buildRules();
     }
 
-    public static function create(Validator $validator = null): ConfigurationValidator {
+    public static function create(?Validator $validator = null): ConfigurationValidator {
         return new self($validator);
     }
 
