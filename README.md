@@ -31,7 +31,16 @@ The metaLogger has several loggers capable of reporting different things to the 
 
 #### ip check
 
-The ip check will get the internal IP of the server.  The output of `ifconfig` has changed through the years, therefor there are serveral parser versions, the current being version `3` which should be used for the initial tests.  The netmask of the expected network should be used to remove any other network interfaces that may be returned by `ifconfig`
+The IP check reports local IPv4 addresses. Parser versions `1`–`3` use `ifconfig`; version `4` uses `ip a` for systems such as Debian 13. Version `4` requires `iproute2` (`apt install iproute2` on Debian), excludes loopback and IPv6 addresses, and removes CIDR suffixes. Set the expected network mask to filter out other interfaces, including Docker bridges. Multiple matching addresses are reported on separate lines.
+
+Select version `4` in your configuration (or when prompted by `config:build`):
+
+```yaml
+log:
+  ip:
+    version: 4
+    mask: 192.168.1.0/24 # replace with your local network
+```
 
 #### drive
 
@@ -70,6 +79,17 @@ Full paths should be used when creating cronjobs, this is an example of a metaLo
 
 ## Development of metaLogger
 The metaLogger.phar is built using a virtual machine instance.
+
+### Debian 13 IP parser tests
+
+With Composer dependencies installed in `symfony/vendor/`, run from the repository root:
+
+```sh
+docker build -f devops/images/debian13-test.Dockerfile -t metalogger-debian13-test .
+docker run --rm -v "$PWD/symfony:/app:ro" metalogger-debian13-test
+```
+
+This runs the PHPUnit suite using Debian's PHP and PHPUnit packages, including a live version `4` check against the container's network interfaces without `ifconfig`. Fixture tests cover loopback/IPv6 exclusion, CIDR removal, multiple interfaces, network-mask filtering, and empty results. The live container test is skipped outside this image.
 
 ---
 <dl>

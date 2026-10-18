@@ -47,7 +47,7 @@ class ConfigurationValidator {
             ->rule('array', ['logger', 'log', 'log.drive', 'log.file_access', '.log.file_count'])->message('{field} must be array')
             ->rule('required', ['log.ip.version', 'log.ip.mask'])
             ->rule('integer', ['log.ip.version'])
-            ->rule('in', 'log.ip.version', [ IpParser::VERSION_1, IpParser::VERSION_2, IpParser::VERSION_3 ])
+            ->rule('in', 'log.ip.version', [ IpParser::VERSION_1, IpParser::VERSION_2, IpParser::VERSION_3, IpParser::VERSION_4 ])
             ->rule('optional', ['log.drive', 'log.file_access', '.log.file_count']);
     }
 }

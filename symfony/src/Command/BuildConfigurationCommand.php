@@ -28,7 +28,7 @@ The <info>%command.name%</info> command will prompt the user for the required co
 <info>api_single:</info> The endpoint for single log requests
 <info>api_series:</info> The endpoint for series log requests
 <info>api_ip:</info> The API endpoint for IP requests
-<info>Ip Version:</info> The version of the ifconfig scraper to use, defaults to 3.
+<info>Ip Version:</info> The local IP parser version: 1-3 use ifconfig, 4 uses ip a (Debian 13). Defaults to 3.
 <info>internal IP mask:</info> The IP mask to restrict internal IP addresses to, no mask will allow all internal IPs to log.
 
 HELP
@@ -48,7 +48,7 @@ HELP
             'single' => ['default' => null, 'help' => 'The Single Value Endpoint for the MetaLogger API'],
             'series' => ['default' => null, 'help' => 'The Series Value Endpoint for the MetaLogger API'],
             'ip'=> ['default' => null, 'help' => 'The IP Logging Endpoint for the MetaLogger API'],
-            'version' => ['default' => 3, 'help' => 'The version of the ifconfig scraper to use, defaults to 3.'],
+            'version' => ['default' => 3, 'help' => 'The local IP parser version: 1-3 use ifconfig, 4 uses ip a (Debian 13). Defaults to 3.'],
             'mask' => ['default' => '0.0.0.0/0', 'help' => 'The IP mask to restrict internal IP addresses to, no mask will allow all internal IPs to log.'],
 
         ];
