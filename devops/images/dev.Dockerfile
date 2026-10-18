@@ -1,5 +1,11 @@
 FROM php:7.2-fpm-buster
 
+# Buster is archived; retain signed repositories and allow their frozen metadata.
+RUN printf '%s\n' \
+    'deb [check-valid-until=no] http://archive.debian.org/debian buster main' \
+    'deb [check-valid-until=no] http://archive.debian.org/debian-security buster/updates main' \
+    > /etc/apt/sources.list
+
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
     git \

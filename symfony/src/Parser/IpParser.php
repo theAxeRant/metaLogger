@@ -10,6 +10,7 @@ class IpParser implements ParserInterface {
     const VERSION_1 = '1';
     const VERSION_2 = '2';
     const VERSION_3 = '3';
+    const VERSION_4 = '4';
 
     private $logger;
     private $version;
@@ -31,9 +32,10 @@ class IpParser implements ParserInterface {
             self::VERSION_1 => "/sbin/ifconfig | grep 'inet addr:' | grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'",
             self::VERSION_2 => "/sbin/ifconfig | grep 'inet ' | grep -v '127.0.0.1' | cut -d\  -f10 | awk '{ print $1}'",
             self::VERSION_3 => "/sbin/ifconfig | grep 'inet ' | grep -v '127.0.0.1' | grep -v '172.17.0.1' | cut -d\  -f10 | awk '{ print $1}'",
+            self::VERSION_4 => "ip a | awk '\$1 == \"inet\" && \$2 !~ /^127\\./ { split(\$2, address, \"/\"); print address[1] }'",
         ];
 
-        $ips = trim(shell_exec($internal_ip_check[$this->version]));
+        $ips = trim((string) shell_exec($internal_ip_check[$this->version]));
         $ips = explode("\n", $ips);
         $ips = array_filter($ips, function($ip) {
             return !IpHelper::filterFromMask($ip, $this->netmask);
