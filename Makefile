@@ -8,29 +8,46 @@
 #
 .DEFAULT_GOAL := phar
 DEV = devops/dev
+COMPOSE = docker compose --project-directory "$(DEV)"
 
-build:
+.PHONY: check-config build up down bash phar
+
+check-config:
+	@test -s "$(DEV)/compose.override.yaml" || { echo "ERROR: $(DEV)/compose.override.yaml is missing; copy compose.override.yaml.example and configure the checkout path." >&2; exit 1; }
+
+build: check-config
 	@echo "##### Building Dev Image #####"
-	@test -s ${DEV}/compose.override.yaml || { echo "ERROR: compose.override.yaml is missing"; exit 1; }
-	@(cd ${DEV} && docker compose build php)
+	@$(COMPOSE) build php
 
-up:
+up: check-config
 	@echo "##### Bringing up Dev Containers #####"
-	@test -s ${DEV}/compose.override.yaml || { echo "ERROR: compose.override.yaml is missing"; exit 1; }
-	@(cd ${DEV} && docker compose up -d)
+	@$(COMPOSE) up -d
 
-down: up
+down: check-config
 	@echo "##### Stopping Dev Containers #####"
-	@(cd ${DEV} && docker compose down)
+	@$(COMPOSE) down
 
 bash: up
 	@echo "##### Dev php Container Bash Prompt #####"
-	@(cd ${DEV} && docker compose exec php bash)
+	@$(COMPOSE) exec php bash
 
-phar: build
+phar: check-config build
 	@echo "##### Building Phar File #####"
-	@test -s ${DEV}/compose.override.yaml || { echo "ERROR: compose.override.yaml is missing"; exit 1; }
-	@(cd ${DEV} && docker compose up -d)
-	@(cd ${DEV} && docker compose exec php composer install)
-	@(cd ${DEV} && docker compose exec php make build)
-	@(cd ${DEV} && docker compose down)
+	@set -e; \
+	cleanup() { \
+		status=$$?; \
+		trap - 0; \
+		$(COMPOSE) down || { \
+			cleanup_status=$$?; \
+			if [ "$$status" -eq 0 ]; then status=$$cleanup_status; fi; \
+		}; \
+		exit "$$status"; \
+	}; \
+	trap cleanup 0; \
+	trap 'exit 130' INT; \
+	trap 'exit 143' TERM; \
+	$(COMPOSE) up -d; \
+	$(COMPOSE) exec -T php composer install --no-interaction; \
+	$(COMPOSE) exec -T php make build; \
+	mkdir -p release; \
+	$(COMPOSE) cp php:/var/www/symfony/metaLogger.phar release/metaLogger.phar

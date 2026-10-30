@@ -18,7 +18,7 @@ class Application extends \Symfony\Component\Console\Application {
 /_/ /_/ /_/\___/\__/\__,_/_____/\____/\__, /\__, /\___/_/
                                      /____//____/";
 
-    const VERSION = '1.0.0';
+    const VERSION = '1.1.0';
 
     const TAG_LINE = 'Log, or die!';
     public function __construct() {

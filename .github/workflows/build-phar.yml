@@ -1,0 +1,111 @@
+name: Build PHAR
+
+on:
+  push:
+    branches: ['**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-phar-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    if: github.ref_type == 'branch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    outputs:
+      version: ${{ steps.verify.outputs.version }}
+      sha256: ${{ steps.verify.outputs.sha256 }}
+    steps:
+      - name: Check out the source commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Set up PHP and Composer
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        env:
+          fail-fast: 'true'
+        with:
+          php-version: '7.2'
+          extensions: dom, mbstring, phar, xml, xmlwriter, zlib
+          coverage: none
+          tools: composer:2.11.1
+
+      - name: Install the pinned Box release
+        env:
+          BOX_SHA256: 28b4b798ad4dcf8fbf9cd68aaff495d4bbeaec4363f5f319a222829d9b6abdfe
+        run: |
+          curl --fail --location --retry 3 \
+            --output "$RUNNER_TEMP/box-2.7.5.phar" \
+            https://github.com/box-project/box2/releases/download/2.7.5/box-2.7.5.phar
+          printf '%s  %s\n' "$BOX_SHA256" "$RUNNER_TEMP/box-2.7.5.phar" | sha256sum --check --status
+
+      - name: Install locked dependencies
+        working-directory: symfony
+        run: composer install --no-interaction --prefer-dist --no-progress --no-plugins --no-scripts
+
+      - name: Test PHAR publication safeguards
+        run: python3 -m unittest discover -s .github/tests
+
+      - name: Run PHPUnit
+        working-directory: symfony
+        run: vendor/bin/phpunit --do-not-cache-result --bootstrap vendor/autoload.php test/
+
+      - name: Build the PHAR
+        working-directory: symfony
+        run: php -d phar.readonly=0 "$RUNNER_TEMP/box-2.7.5.phar" build -c box.json
+
+      - name: Verify packaged source and declared version
+        id: verify
+        run: |
+          version=$(php .github/scripts/verify-phar.php symfony/metaLogger.phar)
+          sha256=$(sha256sum symfony/metaLogger.phar | cut -d ' ' -f 1)
+          printf 'version=%s\nsha256=%s\n' "$version" "$sha256" >> "$GITHUB_OUTPUT"
+          php symfony/metaLogger.phar --version
+          php symfony/metaLogger.phar list --raw
+
+      - name: Upload the verified PHAR
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: metalogger-phar-${{ github.sha }}
+          path: symfony/metaLogger.phar
+          if-no-files-found: error
+          retention-days: 3
+          overwrite: true
+
+  publish:
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - name: Check out the source commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Download the verified PHAR
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: metalogger-phar-${{ github.sha }}
+          path: ${{ runner.temp }}/built-phar
+
+      - name: Commit the PHAR to its source branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_BRANCH: ${{ github.ref_name }}
+          SOURCE_SHA: ${{ github.sha }}
+          PHAR_PATH: ${{ runner.temp }}/built-phar/metaLogger.phar
+          PHAR_VERSION: ${{ needs.build.outputs.version }}
+          PHAR_SHA256: ${{ needs.build.outputs.sha256 }}
+        run: |
+          gh auth setup-git --hostname github.com
+          bash .github/scripts/publish-phar.sh
