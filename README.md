@@ -78,7 +78,66 @@ Full paths should be used when creating cronjobs, this is an example of a metaLo
 ```
 
 ## Development of metaLogger
-The metaLogger.phar is built using a virtual machine instance.
+
+Development and PHAR packaging use Docker Compose. Copy
+`devops/dev/compose.override.yaml.example` to `devops/dev/compose.override.yaml`
+and replace `<path to solution>` with the absolute path to this checkout.
+
+Run these commands from the repository root:
+
+```sh
+make build # build the PHP development image
+make up    # start development containers
+make bash  # start containers and open an interactive PHP container shell
+make down  # stop development containers
+make phar  # build the image, install dependencies, and package the release
+```
+
+Running `make` without a target also runs `phar`. The PHAR workflow installs
+dependencies from `symfony/composer.lock`, builds `symfony/metaLogger.phar`, and
+copies it to `release/metaLogger.phar` using Docker Compose. A release-directory
+mount is optional. The workflow stops the development containers on completion
+or failure and returns a failing status if any build, copy, or cleanup step fails.
+
+Inside the PHP container, `make build` from `symfony/` only builds the PHAR;
+the root Makefile handles copying it into `release/` and stopping containers.
+
+### Automatic PHAR builds
+
+The **Build PHAR** GitHub Actions workflow runs on pushes to repository branches.
+It tests the code with PHP 7.2, builds with pinned Composer and Box versions, and
+checks that the packaged application files match the source. The version comes
+directly from `Application::VERSION`; update that constant when changing the
+declared release version. The workflow adds no version suffix and does not bump
+the version automatically.
+
+After verification, a separate job commits only `release/metaLogger.phar` back
+to the same branch using `github-actions[bot]`. Builds whose branch has advanced
+are discarded, and newer pushes start a replacement build. Every branch push
+triggers a build so even a documentation-only push can replace an older run.
+The bot's own push uses `GITHUB_TOKEN`, which does not trigger another push
+workflow. Tests run before the bot commit; that commit does not start other
+push-triggered CI workflows either.
+
+The publishing job needs `contents: write` permission. Repository or organization
+policies and branch protections must permit its ordinary push; the workflow does
+not bypass those rules. Pull requests from forks do not trigger publication in
+this repository. To rebuild manually, select **Actions > Build PHAR > Run
+workflow** and choose a branch. Workflow files must be committed and pushed
+before the automation can run; manual dispatch also requires the workflow on
+the repository's default branch.
+
+### Workflow security checks
+
+The **Workflow security** workflow runs zizmor on pushes, pull requests, and
+manual dispatches. It scans all workflows for unsafe patterns and requires
+actions to be pinned to full commit hashes. Online audits also check action
+references against GitHub's current security information. Both the zizmor
+action and its CLI version are pinned.
+
+Findings fail the check directly, without requiring GitHub Advanced Security
+or repository write permissions. To enforce this check before merging, make
+`zizmor` a required status check in the applicable branch rules.
 
 ### Debian 13 IP parser tests
 

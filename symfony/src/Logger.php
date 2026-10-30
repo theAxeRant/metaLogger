@@ -3,6 +3,7 @@
 namespace Theaxerant\Metalogger;
 
 use Exception;
+use Theaxerant\Metalogger\Util\Application;
 
 class Logger
 {
@@ -103,9 +104,15 @@ class Logger
      */
     private function postOptions(string $content): array
     {
+        $headers = [
+            'Content-type: text/plain',
+            'X-AUTH-TOKEN: ' . $this->securityToken,
+            'User-Agent: metaLogger/' . Application::VERSION,
+        ];
+
         return [
             'http' => [
-                'header' => "Content-type: text/plain\r\nX-AUTH-TOKEN: " . $this->securityToken . "\r\n",
+                'header' => implode("\r\n", $headers) . "\r\n",
                 'method' => 'POST',
                 'content' => $content,
             ],
