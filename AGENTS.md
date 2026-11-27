@@ -22,6 +22,8 @@ First copy `devops/dev/compose.override.yaml.example` to `devops/dev/compose.ove
 - Inside the container, `composer install` installs dependencies from `symfony/composer.lock`.
 - From `symfony/`, `php console list` lists commands; `php console config:validate /path/to/config.yaml` checks a configuration.
 
+For ordinary pull-request changes, CI handles the release PHAR. `.github/workflows/build-phar.yml` runs on repository branch pushes, tests with PHP 7.2, builds and verifies the PHAR, and commits `release/metaLogger.phar` back to the same branch. A local rebuild is unnecessary unless explicitly requested or needed to investigate packaging; leaving the PHAR unchanged locally is expected. Fork pull requests do not trigger PHAR publication in this repository. See README.md's "Automatic PHAR builds" section for details.
+
 ## Coding Style & Naming Conventions
 
 Use four spaces for PHP indentation, PascalCase class names matching filenames, camelCase methods, and uppercase constants. Follow surrounding brace style; existing files vary. Preserve compatibility with the PHP 7.2 development environment. Add types and PHPDoc where useful. New metric parsers should implement `ParserInterface`. No formatter or linter is configured.

@@ -33,6 +33,8 @@ The metaLogger has several loggers capable of reporting different things to the 
 
 The IP check reports local IPv4 addresses. Parser versions `1`–`3` use `ifconfig`; version `4` uses `ip a` for systems such as Debian 13. Version `4` requires `iproute2` (`apt install iproute2` on Debian), excludes loopback and IPv6 addresses, and removes CIDR suffixes. Set the expected network mask to filter out other interfaces, including Docker bridges. Multiple matching addresses are reported on separate lines.
 
+IP check requests use IPv4 so the logging service observes the machine's public IPv4 address. The configured endpoint must be reachable over IPv4.
+
 Select version `4` in your configuration (or when prompted by `config:build`):
 
 ```yaml
