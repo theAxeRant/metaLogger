@@ -42,6 +42,11 @@ class LoggerTest extends TestCase {
             'X-AUTH-TOKEN: test-key',
             'User-Agent: metaLogger/' . Application::VERSION,
         ], $headers);
+        if ($method === 'ipCheck') {
+            $this->assertSame(['bindto' => '0.0.0.0:0'], $request['context']['socket']);
+        } else {
+            $this->assertArrayNotHasKey('socket', $request['context']);
+        }
     }
 
     public static function logRequestProvider(): array {
@@ -65,6 +70,7 @@ class LoggerRequestStream {
         self::$requests[] = [
             'url' => $path,
             'options' => stream_context_get_options($this->context)['http'],
+            'context' => stream_context_get_options($this->context),
         ];
         return true;
     }

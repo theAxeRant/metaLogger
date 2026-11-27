@@ -34,6 +34,8 @@ class Logger
     {
         $url = $this->generateIpCheckUrl();
         $postOptions = $this->postOptions($internal_ip);
+        // Send the IP check over IPv4 so the service observes the public IPv4 address.
+        $postOptions['socket']['bindto'] = '0.0.0.0:0';
         $context = stream_context_create($postOptions);
         $post = file_get_contents($url, false, $context);
         if ($post === false) {
